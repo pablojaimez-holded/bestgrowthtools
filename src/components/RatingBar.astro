@@ -1,0 +1,21 @@
+---
+interface Props {
+  label: string;
+  score: number;
+  maxScore?: number;
+}
+
+const { label, score, maxScore = 5 } = Astro.props;
+const percentage = (score / maxScore) * 100;
+---
+
+<div class="flex items-center gap-4">
+  <span class="text-sm font-medium text-text-secondary w-32 shrink-0">{label}</span>
+  <div class="flex-1 h-2.5 bg-cream-dark rounded-full overflow-hidden">
+    <div
+      class="h-full rounded-full bg-gradient-to-r from-accent to-violet transition-all duration-700"
+      style={`width: ${percentage}%`}
+    ></div>
+  </div>
+  <span class="text-sm font-bold font-sans text-text-primary w-8 text-right">{score.toFixed(1)}</span>
+</div>

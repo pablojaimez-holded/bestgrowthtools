@@ -1,0 +1,98 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import ComparisonTable from '../../components/ComparisonTable.astro';
+import FAQ from '../../components/FAQ.astro';
+import CTABanner from '../../components/CTABanner.astro';
+import { categories, getCategoryBySlug } from '../../data/categories';
+
+export function getStaticPaths() {
+  return categories.map(cat => ({
+    params: { slug: cat.slug },
+    props: { category: cat },
+  }));
+}
+
+const { category } = Astro.props;
+const allReviewsRaw = await getCollection('reviews');
+const allReviews = allReviewsRaw.map(r => ({ frontmatter: { ...r.data, slug: r.data.slug || r.id } }));
+const categoryReviews = allReviews
+  .filter(r => r.frontmatter.category === category.slug)
+  .sort((a, b) => b.frontmatter.rating - a.frontmatter.rating);
+
+const faq = [
+  { question: `¿Qué es un software de ${category.name}?`, answer: `Un software de ${category.name} es una herramienta que ayuda a las empresas a gestionar ${category.description.toLowerCase()}. Estas soluciones permiten automatizar procesos, mejorar la eficiencia y tomar mejores decisiones basadas en datos.` },
+  { question: `¿Cuánto cuesta un ${category.name}?`, answer: `Los precios varían según el proveedor. Puedes encontrar opciones desde planes gratuitos limitados hasta soluciones enterprise de más de 100€/mes por usuario. La mayoría ofrece prueba gratuita.` },
+  { question: `¿Necesito un ${category.name} si soy autónomo?`, answer: `Depende de tu volumen de negocio. Para autónomos, existen opciones asequibles y simplificadas que pueden ahorrarte mucho tiempo en tareas administrativas.` },
+];
+---
+
+<BaseLayout
+  title={`Mejor Software de ${category.name} en 2026 | Best Growth Tools`}
+  description={`Compara el mejor software de ${category.name} del mercado. Reviews, precios y valoraciones actualizadas en 2026.`}
+>
+  <!-- Category Header -->
+  <div class={`${category.gradient} py-16`}>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
+      <span class="text-5xl mb-4 block">{category.icon}</span>
+      <h1 class="font-sans text-4xl font-bold mb-2">Mejor Software de {category.name} en 2026</h1>
+      <p class="text-white/80 text-lg">{categoryReviews.length} productos analizados y comparados</p>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <Breadcrumb items={[{ label: category.name }]} />
+
+    <!-- Intro -->
+    <div class="prose-review max-w-3xl mb-12">
+      <p>
+        Elegir el mejor software de {category.name.toLowerCase()} es una decisión crucial para cualquier empresa.
+        En esta guía hemos analizado las principales herramientas del mercado, evaluando funcionalidades, precios,
+        facilidad de uso y soporte al cliente para ayudarte a tomar la mejor decisión.
+      </p>
+    </div>
+
+    <!-- Products Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+      {categoryReviews.map(review => (
+        <ProductCard
+          name={review.frontmatter.name}
+          slug={review.frontmatter.slug}
+          logo={review.frontmatter.logo}
+          tagline={review.frontmatter.tagline}
+          rating={review.frontmatter.rating}
+          pricing={review.frontmatter.pricing}
+          category={category.name}
+          pros={review.frontmatter.bestFor}
+          affiliateUrl={review.frontmatter.affiliateUrl}
+        />
+      ))}
+    </div>
+
+    <!-- Comparison Table -->
+    {categoryReviews.length > 1 && (
+      <section>
+        <h2 class="font-sans text-2xl font-bold text-text-primary mb-4">Comparativa rápida</h2>
+        <ComparisonTable products={categoryReviews.map(r => ({
+          name: r.frontmatter.name,
+          slug: r.frontmatter.slug,
+          rating: r.frontmatter.rating,
+          pricing: r.frontmatter.pricing,
+          freeTrialDays: r.frontmatter.freeTrialDays,
+          bestFor: r.frontmatter.bestFor,
+        }))} />
+      </section>
+    )}
+
+    <FAQ items={faq} title={`Preguntas frecuentes sobre ${category.name}`} />
+
+    <CTABanner
+      title={`Encuentra el mejor ${category.name} para tu empresa`}
+      subtitle="Compara herramientas lado a lado"
+      buttonText={`Ver Top 5 ${category.name} →`}
+      buttonUrl={`/mejores/${category.slug}`}
+    />
+  </div>
+</BaseLayout>

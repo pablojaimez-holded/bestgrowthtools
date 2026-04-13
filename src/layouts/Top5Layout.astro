@@ -1,0 +1,71 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import RatingStars from '../components/RatingStars.astro';
+import ComparisonTable from '../components/ComparisonTable.astro';
+import FAQ from '../components/FAQ.astro';
+import CTABanner from '../components/CTABanner.astro';
+
+const { frontmatter } = Astro.props;
+const fm = frontmatter;
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": fm.title,
+  "description": fm.metaDescription,
+  "numberOfItems": fm.products?.length || 5,
+  "itemListElement": (fm.productDetails || []).map((p: any, i: number) => ({
+    "@type": "ListItem",
+    "position": i + 1,
+    "name": p.name,
+    "url": `https://bestgrowthtools.com/review/${p.slug}`
+  }))
+};
+---
+
+<BaseLayout title={fm.metaTitle} description={fm.metaDescription} schema={schema}>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <Breadcrumb items={[
+      { label: fm.category ? fm.category.toUpperCase() : 'Top 5', href: fm.category ? `/categoria/${fm.category}` : undefined },
+      { label: fm.title }
+    ]} />
+
+    <!-- Hero -->
+    <div class="text-center mb-12">
+      <span class="badge bg-accent/10 text-accent mb-4">Actualizado {fm.updatedAt}</span>
+      <h1 class="font-sans text-4xl md:text-5xl font-bold text-text-primary mb-4">{fm.title}</h1>
+      <p class="text-text-secondary text-lg max-w-2xl mx-auto">
+        Hemos analizado y comparado las mejores opciones del mercado para ayudarte a elegir la herramienta ideal.
+      </p>
+    </div>
+
+    <!-- Content (intro + product sections from markdown) -->
+    <article class="prose-review">
+      <slot />
+    </article>
+
+    <!-- Comparison Table -->
+    {fm.productDetails && (
+      <section class="mt-12">
+        <h2 class="font-sans text-2xl font-bold text-text-primary mb-4">Tabla comparativa</h2>
+        <ComparisonTable products={fm.productDetails} />
+      </section>
+    )}
+
+    <!-- FAQ -->
+    {fm.faq && <FAQ items={fm.faq} />}
+
+    <!-- CTA -->
+    <CTABanner
+      title="¿No sabes cuál elegir?"
+      subtitle="Compara las herramientas lado a lado y encuentra la mejor para tu negocio"
+      buttonText="Ver comparativas →"
+      buttonUrl="/comparar/hubspot-vs-pipedrive"
+    />
+
+    <p class="text-center text-text-muted text-sm mt-8">
+      Última actualización: {fm.updatedAt}
+    </p>
+  </div>
+</BaseLayout>

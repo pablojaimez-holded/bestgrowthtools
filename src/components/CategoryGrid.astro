@@ -1,0 +1,21 @@
+---
+import { categories } from '../data/categories';
+---
+
+<section class="py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="font-sans text-3xl font-bold text-text-primary mb-2 text-center">Explora por categoría</h2>
+    <p class="text-text-secondary text-center mb-10">Encuentra el software perfecto para cada área de tu negocio</p>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {categories.map(cat => (
+        <a href={`/categoria/${cat.slug}`} class="card p-6 text-center group">
+          <div class={`w-14 h-14 rounded-2xl ${cat.gradient} flex items-center justify-center mx-auto mb-4 text-white text-2xl group-hover:scale-110 transition-transform`}>
+            {cat.icon}
+          </div>
+          <h3 class="font-sans font-bold text-text-primary mb-1">{cat.name}</h3>
+          <p class="text-text-muted text-sm">{cat.count} productos</p>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

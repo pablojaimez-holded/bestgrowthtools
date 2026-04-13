@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://saasreview.es/sitemap-index.xml

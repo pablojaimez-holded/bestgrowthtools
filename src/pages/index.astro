@@ -1,0 +1,244 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CategoryGrid from '../components/CategoryGrid.astro';
+import ProductCard from '../components/ProductCard.astro';
+import RatingStars from '../components/RatingStars.astro';
+import FAQ from '../components/FAQ.astro';
+import CTABanner from '../components/CTABanner.astro';
+
+const allReviewsRaw = await getCollection('reviews');
+const allReviews = allReviewsRaw.map(r => ({ frontmatter: { ...r.data, slug: r.data.slug || r.id } }));
+const topRated = [...allReviews].sort((a, b) => b.frontmatter.rating - a.frontmatter.rating).slice(0, 6);
+const recentReviews = [...allReviews].sort((a, b) => new Date(b.frontmatter.updatedAt).getTime() - new Date(a.frontmatter.updatedAt).getTime()).slice(0, 6);
+
+const homeSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Best Growth Tools",
+  "url": "https://bestgrowthtools.com",
+  "description": "Reviews honestas y comparativas de software SaaS en español",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Best Growth Tools",
+    "url": "https://bestgrowthtools.com"
+  }
+};
+
+const faq = [
+  { question: '¿Qué es un software SaaS?', answer: 'SaaS (Software as a Service) es un modelo de distribución de software en el que las aplicaciones se alojan en la nube y se accede a ellas a través de internet, generalmente mediante una suscripción mensual o anual.' },
+  { question: '¿Cómo elegir el mejor CRM para mi empresa?', answer: 'Para elegir el mejor CRM, considera el tamaño de tu equipo, tu presupuesto, las integraciones que necesitas, la facilidad de uso y si necesitas funcionalidades específicas como automatización de marketing o gestión de proyectos.' },
+  { question: '¿Qué es un ERP y para qué sirve?', answer: 'Un ERP (Enterprise Resource Planning) es un sistema de gestión integral que unifica procesos como contabilidad, facturación, inventario, recursos humanos y más en una sola plataforma.' },
+  { question: '¿Las reviews de Best Growth Tools son independientes?', answer: 'Sí. Nuestras evaluaciones se basan en análisis exhaustivos de funcionalidades, precios, experiencia de usuario y soporte. Aunque algunos enlaces son de afiliado, esto nunca influye en nuestras puntuaciones.' },
+  { question: '¿Con qué frecuencia se actualizan las reviews?', answer: 'Actualizamos nuestras reviews trimestralmente o cada vez que un producto realiza cambios significativos en precios o funcionalidades.' },
+];
+
+const top5Landings = [
+  { title: 'Mejores CRM', slug: 'crm', icon: '👥' },
+  { title: 'Mejores ERP', slug: 'erp', icon: '🏢' },
+  { title: 'Mejor Facturación', slug: 'software-facturacion', icon: '🧾' },
+  { title: 'Mejor Marketing', slug: 'herramientas-marketing', icon: '📣' },
+  { title: 'Mejor RRHH', slug: 'software-rrhh', icon: '🧑‍💼' },
+];
+
+const vsPages = [
+  { title: 'HubSpot vs Pipedrive', slug: 'hubspot-vs-pipedrive' },
+  { title: 'Holded vs Sage', slug: 'holded-vs-sage' },
+  { title: 'Notion vs ClickUp', slug: 'notion-vs-clickup' },
+];
+---
+
+<BaseLayout
+  title="Best Growth Tools — Reviews y Comparativas de Software en Español"
+  description="Encuentra el mejor software SaaS para tu empresa. Reviews honestas, comparativas detalladas y rankings actualizados en 2026."
+  schema={homeSchema}
+>
+  <!-- HERO -->
+  <section class="relative overflow-hidden py-20 md:py-28">
+    <div class="absolute inset-0 hero-gradient"></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="font-sans text-4xl md:text-6xl font-extrabold text-text-primary mb-4 leading-tight">
+        Encuentra el <span class="gradient-text">software perfecto</span><br />para tu negocio
+      </h1>
+      <p class="text-text-secondary text-lg md:text-xl max-w-2xl mx-auto mb-10">
+        Reviews honestas, comparativas detalladas y rankings actualizados. Todo en español.
+      </p>
+
+      <!-- Search -->
+      <div class="max-w-xl mx-auto mb-12">
+        <div class="card-static flex items-center p-2">
+          <svg class="w-5 h-5 text-text-muted ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input type="text" placeholder="Buscar software... (ej: HubSpot, facturación, CRM)" class="flex-1 px-4 py-3 bg-transparent outline-none text-text-primary placeholder:text-text-muted" />
+          <button class="btn-primary !px-6 !py-3">Buscar</button>
+        </div>
+      </div>
+
+      <!-- Stat cards -->
+      <div class="flex flex-wrap justify-center gap-6">
+        <div class="card-static px-6 py-4 text-center">
+          <span class="font-sans text-2xl font-bold gradient-text">{allReviews.length}+</span>
+          <span class="text-text-muted text-sm block">Reviews</span>
+        </div>
+        <div class="card-static px-6 py-4 text-center">
+          <span class="font-sans text-2xl font-bold gradient-text">8</span>
+          <span class="text-text-muted text-sm block">Categorías</span>
+        </div>
+        <div class="card-static px-6 py-4 text-center">
+          <span class="font-sans text-2xl font-bold gradient-text">100%</span>
+          <span class="text-text-muted text-sm block">Independiente</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORÍAS -->
+  <CategoryGrid />
+
+  <!-- TOP RATED -->
+  <section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="font-sans text-3xl font-bold text-text-primary mb-2 text-center">Los mejor valorados</h2>
+      <p class="text-text-secondary text-center mb-10">Software con las mejores puntuaciones de nuestro equipo</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {topRated.map((review, i) => (
+          <div class="relative">
+            {i < 3 && (
+              <div class="absolute -top-3 -left-3 z-10 w-8 h-8 rounded-full bg-gradient-to-br from-accent to-violet flex items-center justify-center text-white font-bold text-sm shadow-lg">
+                {i + 1}
+              </div>
+            )}
+            <ProductCard
+              name={review.frontmatter.name}
+              slug={review.frontmatter.slug}
+              logo={review.frontmatter.logo}
+              tagline={review.frontmatter.tagline}
+              rating={review.frontmatter.rating}
+              pricing={review.frontmatter.pricing}
+              category={review.frontmatter.category}
+              pros={review.frontmatter.bestFor}
+              affiliateUrl={review.frontmatter.affiliateUrl}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- QUÉ ES BEST GROWTH TOOLS -->
+  <section class="py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="card-static p-10 md:p-12 text-center relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-accent/10 to-violet/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+        <h2 class="font-sans text-3xl font-bold text-text-primary mb-6 relative">¿Qué es Best Growth Tools?</h2>
+        <div class="text-text-secondary leading-relaxed space-y-4 text-left relative">
+          <p>Best Growth Tools es la guía de referencia en español para elegir software empresarial. Nuestro equipo analiza en profundidad cada herramienta, evaluando funcionalidades, precios, experiencia de usuario, soporte e integraciones para ofrecerte reviews objetivas y útiles.</p>
+          <p>Creemos que elegir el software adecuado puede transformar un negocio. Por eso nos tomamos el tiempo de probar cada producto, compararlo con sus competidores y darte una opinión honesta que te ayude a tomar la mejor decisión.</p>
+          <p>Nuestra metodología se basa en cinco dimensiones clave que evaluamos de forma consistente en cada producto, asegurando comparaciones justas y relevantes para empresas de cualquier tamaño.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CÓMO EVALUAMOS -->
+  <section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="font-sans text-3xl font-bold text-text-primary mb-10 text-center">Cómo evaluamos cada producto</h2>
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
+        {[
+          { icon: '🎯', title: 'Facilidad', desc: 'Interfaz intuitiva, curva de aprendizaje y onboarding' },
+          { icon: '⚙️', title: 'Features', desc: 'Funcionalidades core, automatización y personalización' },
+          { icon: '💬', title: 'Soporte', desc: 'Canales de atención, tiempos de respuesta y documentación' },
+          { icon: '💰', title: 'Valor', desc: 'Relación calidad-precio, planes y transparencia' },
+          { icon: '🔗', title: 'Integraciones', desc: 'Ecosistema de apps, API y conectores nativos' },
+        ].map(item => (
+          <div class="card-static p-6 text-center">
+            <span class="text-3xl block mb-3">{item.icon}</span>
+            <h3 class="font-sans font-bold text-text-primary mb-2">{item.title}</h3>
+            <p class="text-text-muted text-sm">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEWS RECIENTES -->
+  {recentReviews.length > 0 && (
+    <section class="py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="font-sans text-3xl font-bold text-text-primary mb-2 text-center">Reviews recientes</h2>
+        <p class="text-text-secondary text-center mb-10">Las últimas reviews publicadas y actualizadas</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {recentReviews.map(review => (
+            <a href={`/review/${review.frontmatter.slug}`} class="card p-5 flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-cream flex items-center justify-center shrink-0 overflow-hidden">
+                {review.frontmatter.logo ? (
+                  <img src={review.frontmatter.logo} alt={`${review.frontmatter.name} logo`} class="w-8 h-8 object-contain" />
+                ) : (
+                  <span class="text-xl font-bold gradient-text">{review.frontmatter.name.charAt(0)}</span>
+                )}
+              </div>
+              <div class="min-w-0">
+                <h3 class="font-sans font-semibold text-text-primary truncate">{review.frontmatter.name}</h3>
+                <div class="flex items-center gap-2">
+                  <RatingStars rating={review.frontmatter.rating} size="sm" showNumber={false} />
+                  <span class="text-text-muted text-xs">{review.frontmatter.updatedAt}</span>
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- TOP 5 LANDINGS -->
+  <section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="font-sans text-3xl font-bold text-text-primary mb-10 text-center">Top 5 por categoría</h2>
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+        {top5Landings.map(landing => (
+          <a href={`/mejores/${landing.slug}`} class="card p-5 text-center group">
+            <span class="text-2xl block mb-2">{landing.icon}</span>
+            <span class="font-sans font-semibold text-text-primary group-hover:text-accent transition-colors text-sm">{landing.title}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPARATIVAS POPULARES -->
+  <section class="py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="font-sans text-3xl font-bold text-text-primary mb-10 text-center">Comparativas populares</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {vsPages.map(vs => (
+          <a href={`/comparar/${vs.slug}`} class="card p-6 text-center group">
+            <div class="flex items-center justify-center gap-3 mb-3">
+              <span class="font-sans font-bold text-accent">{vs.title.split(' vs ')[0]}</span>
+              <span class="text-text-muted font-bold">vs</span>
+              <span class="font-sans font-bold text-violet">{vs.title.split(' vs ')[1]}</span>
+            </div>
+            <span class="text-text-muted text-sm group-hover:text-accent transition-colors">Ver comparativa →</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <FAQ items={faq} />
+  </section>
+
+  <!-- CTA BANNER -->
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <CTABanner
+      title="¿No sabes cuál elegir?"
+      subtitle="Compara herramientas lado a lado y encuentra la ideal para tu negocio"
+      buttonText="Explorar comparativas →"
+      buttonUrl="/comparar/hubspot-vs-pipedrive"
+    />
+  </div>
+</BaseLayout>

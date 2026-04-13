@@ -1,0 +1,61 @@
+---
+interface Product {
+  name: string;
+  slug: string;
+  rating: number;
+  pricing: string;
+  freeTrialDays?: number;
+  bestFor?: string[];
+}
+
+interface Props {
+  products: Product[];
+}
+
+const { products } = Astro.props;
+---
+
+<div class="overflow-x-auto mt-8">
+  <table class="w-full card-static overflow-hidden">
+    <thead>
+      <tr class="bg-cream">
+        <th class="text-left p-4 font-sans font-semibold text-text-primary text-sm">Producto</th>
+        <th class="text-center p-4 font-sans font-semibold text-text-primary text-sm">Rating</th>
+        <th class="text-center p-4 font-sans font-semibold text-text-primary text-sm">Precio</th>
+        <th class="text-center p-4 font-sans font-semibold text-text-primary text-sm">Prueba gratis</th>
+        <th class="text-left p-4 font-sans font-semibold text-text-primary text-sm">Mejor para</th>
+      </tr>
+    </thead>
+    <tbody>
+      {products.map((product, i) => (
+        <tr class={`border-t border-cream-dark/50 ${i % 2 === 1 ? 'bg-cream/30' : ''}`}>
+          <td class="p-4">
+            <a href={`/review/${product.slug}`} class="font-semibold text-text-primary hover:text-accent transition-colors">
+              {product.name}
+            </a>
+          </td>
+          <td class="p-4 text-center">
+            <span class="font-mono font-bold text-rating">{product.rating.toFixed(1)}</span>
+          </td>
+          <td class="p-4 text-center">
+            <span class="font-mono text-sm">{product.pricing}</span>
+          </td>
+          <td class="p-4 text-center">
+            {product.freeTrialDays ? (
+              <span class="badge bg-pro-bg text-pro-green text-xs">{product.freeTrialDays} días</span>
+            ) : (
+              <span class="text-text-muted text-sm">—</span>
+            )}
+          </td>
+          <td class="p-4">
+            <div class="flex flex-wrap gap-1.5">
+              {(product.bestFor || []).slice(0, 2).map(tag => (
+                <span class="text-xs px-2 py-0.5 rounded-md bg-cream text-text-secondary">{tag}</span>
+              ))}
+            </div>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>

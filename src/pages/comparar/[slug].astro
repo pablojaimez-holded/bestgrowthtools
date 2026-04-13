@@ -1,0 +1,43 @@
+---
+import { getCollection, render } from 'astro:content';
+import VsLayout from '../../layouts/VsLayout.astro';
+
+export async function getStaticPaths() {
+  const vsPages = await getCollection('vs');
+  return vsPages.map(vs => ({
+    params: { slug: vs.data.slug || vs.id },
+    props: { vs },
+  }));
+}
+
+const { vs } = Astro.props;
+const { Content } = await render(vs);
+const frontmatter = vs.data;
+
+// Enrich with product data
+const allReviews = await getCollection('reviews');
+const productA = allReviews.find(r => (r.data.slug || r.id) === frontmatter.productA);
+const productB = allReviews.find(r => (r.data.slug || r.id) === frontmatter.productB);
+
+const enrichedFrontmatter = {
+  ...frontmatter,
+  productAData: productA ? {
+    name: productA.data.name,
+    tagline: productA.data.tagline,
+    rating: productA.data.rating,
+    pricing: productA.data.pricing,
+    affiliateUrl: productA.data.affiliateUrl,
+  } : null,
+  productBData: productB ? {
+    name: productB.data.name,
+    tagline: productB.data.tagline,
+    rating: productB.data.rating,
+    pricing: productB.data.pricing,
+    affiliateUrl: productB.data.affiliateUrl,
+  } : null,
+};
+---
+
+<VsLayout frontmatter={enrichedFrontmatter}>
+  <Content />
+</VsLayout>

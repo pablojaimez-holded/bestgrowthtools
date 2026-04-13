@@ -1,0 +1,40 @@
+---
+import { getCollection, render } from 'astro:content';
+import Top5Layout from '../../layouts/Top5Layout.astro';
+
+export async function getStaticPaths() {
+  const tops = await getCollection('top5');
+  return tops.map(top => ({
+    params: { slug: top.data.slug || top.id },
+    props: { top },
+  }));
+}
+
+const { top } = Astro.props;
+const { Content } = await render(top);
+const frontmatter = top.data;
+
+// Enrich with product details from reviews
+const allReviews = await getCollection('reviews');
+const productDetails = (frontmatter.products || []).map((slug: string) => {
+  const review = allReviews.find(r => (r.data.slug || r.id) === slug);
+  if (!review) return { name: slug, slug, rating: 0, pricing: '—' };
+  const fm = review.data;
+  return {
+    name: fm.name,
+    slug: fm.slug || review.id,
+    rating: fm.rating,
+    pricing: fm.pricing,
+    freeTrialDays: fm.freeTrialDays,
+    bestFor: fm.bestFor,
+    affiliateUrl: fm.affiliateUrl,
+    tagline: fm.tagline,
+  };
+});
+
+const enrichedFrontmatter = { ...frontmatter, productDetails };
+---
+
+<Top5Layout frontmatter={enrichedFrontmatter}>
+  <Content />
+</Top5Layout>

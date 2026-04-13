@@ -1,0 +1,175 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import RatingStars from '../components/RatingStars.astro';
+import RatingBar from '../components/RatingBar.astro';
+import ProsConsCard from '../components/ProsConsCard.astro';
+import FAQ from '../components/FAQ.astro';
+import CTABanner from '../components/CTABanner.astro';
+import { getCategoryBySlug } from '../data/categories';
+
+const { frontmatter } = Astro.props;
+const fm = frontmatter;
+const category = getCategoryBySlug(fm.category);
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": fm.name,
+  "description": fm.tagline,
+  "image": fm.logo,
+  "review": {
+    "@type": "Review",
+    "reviewRating": {
+      "@type": "Rating",
+      "ratingValue": fm.rating,
+      "bestRating": 5
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "Best Growth Tools"
+    }
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": fm.rating,
+    "reviewCount": fm.reviewCount || 1,
+    "bestRating": 5
+  }
+};
+---
+
+<BaseLayout title={fm.metaTitle} description={fm.metaDescription} schema={schema}>
+  <!-- Brand color bar -->
+  <div class="h-1.5 bg-gradient-to-r from-accent to-violet"></div>
+
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <Breadcrumb items={[
+      { label: category?.name || fm.category, href: `/categoria/${fm.category}` },
+      { label: fm.name }
+    ]} />
+
+    <!-- Hero Card -->
+    <div class="card-static p-8 mb-10">
+      <div class="flex flex-col md:flex-row items-start gap-6">
+        <!-- Logo -->
+        <div class="w-20 h-20 rounded-2xl bg-cream flex items-center justify-center shrink-0">
+          {fm.logo ? (
+            <img src={fm.logo} alt={`${fm.name} logo`} class="w-14 h-14 object-contain" />
+          ) : (
+            <span class="text-4xl font-bold gradient-text">{fm.name.charAt(0)}</span>
+          )}
+        </div>
+
+        <div class="flex-1">
+          <h1 class="font-sans text-3xl font-bold text-text-primary mb-1">{fm.name}</h1>
+          <p class="text-text-secondary text-lg mb-4">{fm.tagline}</p>
+
+          <div class="flex flex-wrap items-center gap-4 mb-6">
+            <RatingStars rating={fm.rating} size="lg" />
+            {fm.reviewCount && <span class="text-text-muted text-sm">({fm.reviewCount} reviews)</span>}
+          </div>
+
+          <!-- Quick facts -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+            <div class="bg-cream rounded-xl p-3">
+              <span class="text-text-muted block">Precio</span>
+              <span class="font-mono font-bold text-accent">{fm.pricing}</span>
+            </div>
+            <div class="bg-cream rounded-xl p-3">
+              <span class="text-text-muted block">Trial</span>
+              <span class="font-bold">{fm.freeTrialDays ? `${fm.freeTrialDays} días gratis` : 'No'}</span>
+            </div>
+            <div class="bg-cream rounded-xl p-3">
+              <span class="text-text-muted block">Fundado</span>
+              <span class="font-bold">{fm.founded}</span>
+            </div>
+            <div class="bg-cream rounded-xl p-3">
+              <span class="text-text-muted block">Sede</span>
+              <span class="font-bold">{fm.hq}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CTA sidebar -->
+        <div class="w-full md:w-auto shrink-0 flex flex-col gap-3">
+          <a href={fm.affiliateUrl} target="_blank" rel="noopener sponsored" class="btn-primary text-center whitespace-nowrap">
+            Probar {fm.name} gratis →
+          </a>
+          <a href={fm.website ? `https://${fm.website}` : '#'} target="_blank" rel="noopener" class="btn-outline text-center text-sm">
+            Visitar web
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pros & Cons -->
+    {fm.pros && fm.cons && <ProsConsCard pros={fm.pros} cons={fm.cons} />}
+
+    <!-- Review Content -->
+    <article class="prose-review mt-12">
+      <slot />
+    </article>
+
+    <!-- Scores -->
+    {fm.scores && (
+      <section class="mt-12">
+        <h2 class="font-sans text-2xl font-bold text-text-primary mb-6">Puntuaciones detalladas</h2>
+        <div class="card-static p-8 space-y-5">
+          <RatingBar label="Facilidad de uso" score={fm.scores.ease} />
+          <RatingBar label="Funcionalidades" score={fm.scores.features} />
+          <RatingBar label="Soporte" score={fm.scores.support} />
+          <RatingBar label="Relación calidad-precio" score={fm.scores.value} />
+          <RatingBar label="Integraciones" score={fm.scores.integrations} />
+        </div>
+      </section>
+    )}
+
+    <!-- Best for / Not ideal for -->
+    {(fm.bestFor || fm.notIdealFor) && (
+      <section class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+        {fm.bestFor && (
+          <div class="card-static p-6">
+            <h3 class="font-sans font-bold text-lg text-pro-green mb-4">✅ Ideal para</h3>
+            <ul class="space-y-2">
+              {fm.bestFor.map((item: string) => (
+                <li class="text-text-secondary flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-pro-green shrink-0"></span>{item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {fm.notIdealFor && (
+          <div class="card-static p-6">
+            <h3 class="font-sans font-bold text-lg text-con-red mb-4">⚠️ No ideal para</h3>
+            <ul class="space-y-2">
+              {fm.notIdealFor.map((item: string) => (
+                <li class="text-text-secondary flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-con-red shrink-0"></span>{item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </section>
+    )}
+
+    <!-- FAQ -->
+    {fm.faq && <FAQ items={fm.faq} title={`Preguntas frecuentes sobre ${fm.name}`} />}
+
+    <!-- CTA Final -->
+    <CTABanner
+      title={`¿Listo para probar ${fm.name}?`}
+      subtitle={`Empieza tu prueba gratuita de ${fm.freeTrialDays || 14} días sin compromiso`}
+      buttonText={`Probar ${fm.name} gratis →`}
+      buttonUrl={fm.affiliateUrl}
+      isAffiliate={true}
+    />
+
+    <!-- Updated date -->
+    <p class="text-center text-text-muted text-sm mt-8">
+      Última actualización: {fm.updatedAt}
+    </p>
+  </div>
+</BaseLayout>

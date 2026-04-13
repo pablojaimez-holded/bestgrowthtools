@@ -1,0 +1,84 @@
+---
+import { categories } from '../data/categories';
+---
+
+<footer class="bg-text-primary text-white mt-24">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <!-- Affiliate Disclosure Banner -->
+    <div class="bg-gray-800/50 rounded-xl p-4 mb-12 border border-gray-700">
+      <p class="text-gray-300 text-sm leading-relaxed text-center">
+        <strong class="text-white">Divulgación:</strong> Best Growth Tools contiene enlaces de afiliado. Si contratas un servicio a través de nuestros enlaces, recibimos una comisión sin coste adicional para ti. Esto nos permite mantener el sitio y seguir publicando reviews independientes. Nuestras valoraciones nunca se ven influenciadas por estas comisiones.
+        <a href="/afiliados" class="text-accent hover:underline ml-1">Más información →</a>
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+      <!-- Brand -->
+      <div class="md:col-span-1">
+        <a href="/" class="flex items-center gap-2 mb-4">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-accent to-violet flex items-center justify-center">
+            <span class="text-white font-bold text-sm">BG</span>
+          </div>
+          <span class="font-sans font-bold text-xl">Best<span class="text-accent">Growth</span>Tools</span>
+        </a>
+        <p class="text-gray-400 text-sm leading-relaxed">
+          Reviews honestas, comparativas detalladas y rankings de software para hacer crecer tu negocio. Todo en español.
+        </p>
+      </div>
+
+      <!-- Categorías -->
+      <div>
+        <h4 class="font-sans font-semibold text-sm uppercase tracking-wider text-gray-400 mb-4">Categorías</h4>
+        <ul class="space-y-2">
+          {categories.map(cat => (
+            <li>
+              <a href={`/categoria/${cat.slug}`} class="text-gray-300 hover:text-white transition-colors text-sm">
+                {cat.icon} {cat.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Top 5 -->
+      <div>
+        <h4 class="font-sans font-semibold text-sm uppercase tracking-wider text-gray-400 mb-4">Top 5 Populares</h4>
+        <ul class="space-y-2">
+          <li><a href="/mejores/crm" class="text-gray-300 hover:text-white transition-colors text-sm">Mejores CRM</a></li>
+          <li><a href="/mejores/erp" class="text-gray-300 hover:text-white transition-colors text-sm">Mejores ERP</a></li>
+          <li><a href="/mejores/software-facturacion" class="text-gray-300 hover:text-white transition-colors text-sm">Mejor Facturación</a></li>
+          <li><a href="/mejores/herramientas-marketing" class="text-gray-300 hover:text-white transition-colors text-sm">Mejor Marketing</a></li>
+          <li><a href="/mejores/software-rrhh" class="text-gray-300 hover:text-white transition-colors text-sm">Mejor RRHH</a></li>
+        </ul>
+      </div>
+
+      <!-- Legal & Info -->
+      <div>
+        <h4 class="font-sans font-semibold text-sm uppercase tracking-wider text-gray-400 mb-4">Información</h4>
+        <ul class="space-y-2">
+          <li><a href="/sobre-nosotros" class="text-gray-300 hover:text-white transition-colors text-sm">Sobre nosotros</a></li>
+          <li><a href="/metodologia" class="text-gray-300 hover:text-white transition-colors text-sm">Metodología</a></li>
+          <li><a href="/contacto" class="text-gray-300 hover:text-white transition-colors text-sm">Contacto</a></li>
+          <li><a href="/afiliados" class="text-gray-300 hover:text-white transition-colors text-sm">Divulgación de afiliados</a></li>
+        </ul>
+        <h4 class="font-sans font-semibold text-sm uppercase tracking-wider text-gray-400 mb-4 mt-6">Legal</h4>
+        <ul class="space-y-2">
+          <li><a href="/aviso-legal" class="text-gray-300 hover:text-white transition-colors text-sm">Aviso legal</a></li>
+          <li><a href="/privacidad" class="text-gray-300 hover:text-white transition-colors text-sm">Política de privacidad</a></li>
+          <li><a href="/cookies" class="text-gray-300 hover:text-white transition-colors text-sm">Política de cookies</a></li>
+          <li><a href="/terminos" class="text-gray-300 hover:text-white transition-colors text-sm">Términos de uso</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="border-t border-gray-700 mt-12 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <p class="text-gray-400 text-sm">&copy; {new Date().getFullYear()} Best Growth Tools. Todos los derechos reservados.</p>
+      <div class="flex items-center gap-4">
+        <a href="/aviso-legal" class="text-gray-500 hover:text-gray-300 text-xs transition-colors">Aviso legal</a>
+        <a href="/privacidad" class="text-gray-500 hover:text-gray-300 text-xs transition-colors">Privacidad</a>
+        <a href="/cookies" class="text-gray-500 hover:text-gray-300 text-xs transition-colors">Cookies</a>
+        <a href="/afiliados" class="text-gray-500 hover:text-gray-300 text-xs transition-colors">Afiliados</a>
+      </div>
+    </div>
+  </div>
+</footer>

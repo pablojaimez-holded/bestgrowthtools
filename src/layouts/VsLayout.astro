@@ -1,0 +1,82 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import RatingStars from '../components/RatingStars.astro';
+import FAQ from '../components/FAQ.astro';
+import CTABanner from '../components/CTABanner.astro';
+
+const { frontmatter } = Astro.props;
+const fm = frontmatter;
+---
+
+<BaseLayout title={fm.metaTitle} description={fm.metaDescription}>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <Breadcrumb items={[
+      { label: 'Comparativas', href: '/comparar' },
+      { label: fm.title }
+    ]} />
+
+    <!-- Hero -->
+    <div class="text-center mb-12">
+      <span class="badge bg-violet/10 text-violet mb-4">Comparativa {fm.updatedAt}</span>
+      <h1 class="font-sans text-4xl md:text-5xl font-bold text-text-primary mb-4">{fm.title}</h1>
+      <p class="text-text-secondary text-lg max-w-2xl mx-auto">{fm.metaDescription}</p>
+    </div>
+
+    <!-- VS Header Cards -->
+    {fm.productAData && fm.productBData && (
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+        {[fm.productAData, fm.productBData].map((p: any) => (
+          <div class="card-static p-6 text-center">
+            <div class="w-16 h-16 rounded-2xl bg-cream flex items-center justify-center mx-auto mb-4">
+              <span class="text-3xl font-bold gradient-text">{p.name.charAt(0)}</span>
+            </div>
+            <h2 class="font-sans font-bold text-xl text-text-primary mb-2">{p.name}</h2>
+            <p class="text-text-secondary text-sm mb-3">{p.tagline}</p>
+            <div class="flex justify-center mb-3">
+              <RatingStars rating={p.rating} size="md" />
+            </div>
+            <span class="font-mono font-bold text-accent">{p.pricing}</span>
+          </div>
+        ))}
+      </div>
+    )}
+
+    <!-- Winner summary -->
+    {fm.winner && (
+      <div class="card-static p-6 mb-12">
+        <h2 class="font-sans font-bold text-lg text-text-primary mb-4 text-center">¿Quién gana en cada área?</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-5 gap-3">
+          {Object.entries(fm.winner).map(([dim, winner]) => (
+            <div class="bg-cream rounded-xl p-4 text-center">
+              <span class="text-text-muted text-xs block mb-1 capitalize">{dim}</span>
+              <span class="font-sans font-bold text-text-primary text-sm capitalize">{winner as string}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <!-- Review Content -->
+    <article class="prose-review">
+      <slot />
+    </article>
+
+    <!-- FAQ -->
+    {fm.faq && <FAQ items={fm.faq} />}
+
+    <!-- CTAs -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
+      <a href={fm.productAData?.affiliateUrl || `/review/${fm.productA}`} target="_blank" rel="noopener sponsored" class="btn-primary text-center py-4">
+        Probar {fm.productAData?.name || fm.productA} →
+      </a>
+      <a href={fm.productBData?.affiliateUrl || `/review/${fm.productB}`} target="_blank" rel="noopener sponsored" class="btn-outline text-center py-4">
+        Probar {fm.productBData?.name || fm.productB} →
+      </a>
+    </div>
+
+    <p class="text-center text-text-muted text-sm mt-8">
+      Última actualización: {fm.updatedAt}
+    </p>
+  </div>
+</BaseLayout>
