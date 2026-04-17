@@ -1,5 +1,21 @@
 ---
 import { categories } from '../data/categories';
+
+const top5Popular = [
+  { slug: 'crm', name: 'CRM', icon: '👥' },
+  { slug: 'email-marketing', name: 'Email Marketing', icon: '📧' },
+  { slug: 'ecommerce', name: 'E-commerce', icon: '🛒' },
+  { slug: 'productividad', name: 'Productividad', icon: '⚡' },
+  { slug: 'analytics', name: 'Analytics', icon: '📊' },
+];
+
+const vsPopular = [
+  { slug: 'hubspot-vs-pipedrive', name: 'HubSpot vs Pipedrive' },
+  { slug: 'monday-vs-clickup', name: 'monday.com vs ClickUp' },
+  { slug: 'freshdesk-vs-zendesk', name: 'Freshdesk vs Zendesk' },
+  { slug: 'brevo-vs-convertkit', name: 'Brevo vs ConvertKit' },
+  { slug: 'shopify-vs-sellfy', name: 'Shopify vs Sellfy' },
+];
 ---
 
 <header class="sticky top-0 z-50 bg-cream/80 backdrop-blur-lg border-b border-cream-dark/50">
@@ -14,7 +30,8 @@ import { categories } from '../data/categories';
       </a>
 
       <!-- Nav -->
-      <nav class="hidden md:flex items-center gap-8">
+      <nav class="hidden md:flex items-center gap-6">
+        <!-- Categorías -->
         <div class="relative group">
           <button class="text-text-secondary hover:text-text-primary font-medium transition-colors flex items-center gap-1">
             Categorías
@@ -22,7 +39,7 @@ import { categories } from '../data/categories';
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>
           </button>
-          <div class="absolute top-full left-0 mt-2 w-64 bg-white rounded-card shadow-card-hover opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 p-2">
+          <div class="absolute top-full left-0 mt-2 w-64 bg-white rounded-card shadow-card-hover opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 p-2 max-h-[70vh] overflow-y-auto">
             {categories.map(cat => (
               <a href={`/categoria/${cat.slug}`} class="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-cream transition-colors">
                 <span class="text-lg">{cat.icon}</span>
@@ -31,8 +48,51 @@ import { categories } from '../data/categories';
             ))}
           </div>
         </div>
-        <a href="/mejores/crm" class="text-text-secondary hover:text-text-primary font-medium transition-colors">Top 5</a>
-        <a href="/comparar/hubspot-vs-pipedrive" class="text-text-secondary hover:text-text-primary font-medium transition-colors">Comparar</a>
+
+        <!-- Top 5 -->
+        <div class="relative group">
+          <button class="text-text-secondary hover:text-text-primary font-medium transition-colors flex items-center gap-1">
+            Top 5
+            <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div class="absolute top-full left-0 mt-2 w-72 bg-white rounded-card shadow-card-hover opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 p-2">
+            <a href="/mejores" class="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-cream transition-colors border-b border-cream-dark/30 mb-1">
+              <span class="text-lg">🏆</span>
+              <span class="font-semibold text-accent">Ver todos los rankings</span>
+            </a>
+            {top5Popular.map(t => (
+              <a href={`/mejores/${t.slug}`} class="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-cream transition-colors">
+                <span class="text-lg">{t.icon}</span>
+                <span class="font-medium text-text-primary">Mejores {t.name}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <!-- Comparar -->
+        <div class="relative group">
+          <button class="text-text-secondary hover:text-text-primary font-medium transition-colors flex items-center gap-1">
+            Comparar
+            <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div class="absolute top-full left-0 mt-2 w-72 bg-white rounded-card shadow-card-hover opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 p-2">
+            <a href="/comparar" class="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-cream transition-colors border-b border-cream-dark/30 mb-1">
+              <span class="text-lg">⚖️</span>
+              <span class="font-semibold text-violet">Ver todas las comparativas</span>
+            </a>
+            {vsPopular.map(v => (
+              <a href={`/comparar/${v.slug}`} class="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-cream transition-colors">
+                <span class="text-lg">⚔️</span>
+                <span class="font-medium text-text-primary">{v.name}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+
         <a href="/sobre-nosotros" class="text-text-secondary hover:text-text-primary font-medium transition-colors">Sobre nosotros</a>
       </nav>
 
@@ -43,7 +103,7 @@ import { categories } from '../data/categories';
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
         </button>
-        <a href="/mejores/crm" class="hidden sm:inline-flex btn-primary text-sm !px-4 !py-2">
+        <a href="/mejores" class="hidden sm:inline-flex btn-primary text-sm !px-4 !py-2">
           Encuentra tu herramienta
         </a>
       </div>

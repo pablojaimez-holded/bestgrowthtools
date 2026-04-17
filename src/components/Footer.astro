@@ -26,29 +26,30 @@ import { categories } from '../data/categories';
         </p>
       </div>
 
+      <!-- Top 5 Populares -->
+      <div>
+        <h4 class="font-sans font-semibold text-sm uppercase tracking-wider text-gray-400 mb-4">Top 5 Populares</h4>
+        <ul class="space-y-2">
+          <li><a href="/mejores" class="text-gray-300 hover:text-white transition-colors text-sm">🏆 Todos los rankings</a></li>
+          <li><a href="/mejores/crm" class="text-gray-300 hover:text-white transition-colors text-sm">Mejores CRM</a></li>
+          <li><a href="/mejores/email-marketing" class="text-gray-300 hover:text-white transition-colors text-sm">Mejores Email Marketing</a></li>
+          <li><a href="/mejores/ecommerce" class="text-gray-300 hover:text-white transition-colors text-sm">Mejores E-commerce</a></li>
+          <li><a href="/mejores/productividad" class="text-gray-300 hover:text-white transition-colors text-sm">Mejores Productividad</a></li>
+          <li><a href="/mejores/analytics" class="text-gray-300 hover:text-white transition-colors text-sm">Mejores Analytics</a></li>
+        </ul>
+      </div>
+
       <!-- Categorías -->
       <div>
         <h4 class="font-sans font-semibold text-sm uppercase tracking-wider text-gray-400 mb-4">Categorías</h4>
         <ul class="space-y-2">
-          {categories.map(cat => (
+          {categories.slice(0, 8).map(cat => (
             <li>
               <a href={`/categoria/${cat.slug}`} class="text-gray-300 hover:text-white transition-colors text-sm">
                 {cat.icon} {cat.name}
               </a>
             </li>
           ))}
-        </ul>
-      </div>
-
-      <!-- Top 5 -->
-      <div>
-        <h4 class="font-sans font-semibold text-sm uppercase tracking-wider text-gray-400 mb-4">Top 5 Populares</h4>
-        <ul class="space-y-2">
-          <li><a href="/mejores/crm" class="text-gray-300 hover:text-white transition-colors text-sm">Mejores CRM</a></li>
-          <li><a href="/mejores/erp" class="text-gray-300 hover:text-white transition-colors text-sm">Mejores ERP</a></li>
-          <li><a href="/mejores/software-facturacion" class="text-gray-300 hover:text-white transition-colors text-sm">Mejor Facturación</a></li>
-          <li><a href="/mejores/herramientas-marketing" class="text-gray-300 hover:text-white transition-colors text-sm">Mejor Marketing</a></li>
-          <li><a href="/mejores/software-rrhh" class="text-gray-300 hover:text-white transition-colors text-sm">Mejor RRHH</a></li>
         </ul>
       </div>
 
@@ -60,6 +61,7 @@ import { categories } from '../data/categories';
           <li><a href="/metodologia" class="text-gray-300 hover:text-white transition-colors text-sm">Metodología</a></li>
           <li><a href="/contacto" class="text-gray-300 hover:text-white transition-colors text-sm">Contacto</a></li>
           <li><a href="/afiliados" class="text-gray-300 hover:text-white transition-colors text-sm">Divulgación de afiliados</a></li>
+          <li><a href="/comparar" class="text-gray-300 hover:text-white transition-colors text-sm">⚖️ Comparativas VS</a></li>
         </ul>
         <h4 class="font-sans font-semibold text-sm uppercase tracking-wider text-gray-400 mb-4 mt-6">Legal</h4>
         <ul class="space-y-2">

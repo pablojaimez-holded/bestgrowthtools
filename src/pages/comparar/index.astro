@@ -1,0 +1,70 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const vsPages = await getCollection('vs');
+const allReviews = await getCollection('reviews');
+
+const comparisons = vsPages.map(vs => {
+  const a = allReviews.find(r => (r.data.slug || r.id) === vs.data.productA);
+  const b = allReviews.find(r => (r.data.slug || r.id) === vs.data.productB);
+  return {
+    slug: vs.data.slug,
+    title: vs.data.title,
+    nameA: a?.data.name || vs.data.productA,
+    nameB: b?.data.name || vs.data.productB,
+    logoA: a?.data.logo || `/logos/${vs.data.productA}.svg`,
+    logoB: b?.data.logo || `/logos/${vs.data.productB}.svg`,
+    ratingA: a?.data.rating || 0,
+    ratingB: b?.data.rating || 0,
+  };
+}).sort((a, b) => a.title.localeCompare(b.title));
+---
+
+<BaseLayout
+  title="Comparativas de Software SaaS 2026 — VS Detallados"
+  description="Comparativas VS detalladas de las mejores herramientas SaaS en 2026. HubSpot vs Pipedrive, monday.com vs ClickUp, y 18 comparativas más."
+>
+  <section class="py-16 sm:py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <span class="inline-block px-4 py-1.5 bg-violet/10 text-violet rounded-full text-sm font-medium mb-4">
+          ⚖️ Comparativas actualizadas 2026
+        </span>
+        <h1 class="text-4xl sm:text-5xl font-bold text-text-primary mb-4">
+          Comparativas VS de Software
+        </h1>
+        <p class="text-lg text-text-secondary max-w-2xl mx-auto">
+          Análisis enfrentados de las herramientas más populares. Evaluamos facilidad de uso, funcionalidades, precios, integraciones y soporte.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {comparisons.map(vs => (
+          <a href={`/comparar/${vs.slug}`} class="group bg-white rounded-2xl border border-cream-dark/50 p-6 hover:shadow-card-hover hover:border-violet/30 transition-all duration-300">
+            <div class="flex items-center justify-center gap-4 mb-4">
+              <div class="flex flex-col items-center gap-1">
+                <img src={vs.logoA} alt={vs.nameA} width="40" height="40" class="rounded-lg" />
+                <span class="text-xs font-medium text-text-secondary">{vs.nameA}</span>
+              </div>
+              <span class="text-text-muted font-bold text-lg">VS</span>
+              <div class="flex flex-col items-center gap-1">
+                <img src={vs.logoB} alt={vs.nameB} width="40" height="40" class="rounded-lg" />
+                <span class="text-xs font-medium text-text-secondary">{vs.nameB}</span>
+              </div>
+            </div>
+            <h2 class="text-lg font-bold text-text-primary text-center group-hover:text-violet transition-colors mb-2">{vs.title}</h2>
+            <div class="flex justify-center gap-4 text-sm text-text-muted mb-3">
+              <span>⭐ {vs.ratingA}</span>
+              <span>vs</span>
+              <span>⭐ {vs.ratingB}</span>
+            </div>
+            <span class="text-violet font-semibold text-sm flex items-center justify-center gap-1">
+              Ver comparativa →
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
