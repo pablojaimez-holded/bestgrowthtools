@@ -4,6 +4,7 @@ import Breadcrumb from '../components/Breadcrumb.astro';
 import RatingStars from '../components/RatingStars.astro';
 import FAQ from '../components/FAQ.astro';
 import CTABanner from '../components/CTABanner.astro';
+import LogoImg from '../components/LogoImg.astro';
 
 const { frontmatter } = Astro.props;
 const fm = frontmatter;
@@ -28,8 +29,8 @@ const fm = frontmatter;
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
         {[fm.productAData, fm.productBData].map((p: any) => (
           <div class="card-static p-6 text-center">
-            <div class="w-16 h-16 rounded-2xl bg-cream flex items-center justify-center mx-auto mb-4">
-              <span class="text-3xl font-bold gradient-text">{p.name.charAt(0)}</span>
+            <div class="w-16 h-16 rounded-2xl bg-cream flex items-center justify-center mx-auto mb-4 overflow-hidden">
+              <LogoImg slug={p.slug} name={p.name} class="w-12 h-12 object-contain" />
             </div>
             <h2 class="font-sans font-bold text-xl text-text-primary mb-2">{p.name}</h2>
             <p class="text-text-secondary text-sm mb-3">{p.tagline}</p>

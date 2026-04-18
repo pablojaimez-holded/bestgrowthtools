@@ -1,5 +1,6 @@
 ---
 import RatingStars from './RatingStars.astro';
+import LogoImg from './LogoImg.astro';
 
 interface Props {
   name: string;
@@ -20,11 +21,7 @@ const { name, slug, logo, tagline, rating, pricing, category, pros = [], affilia
   <div class="flex items-start gap-4">
     <!-- Logo -->
     <div class="w-14 h-14 rounded-2xl bg-cream flex items-center justify-center shrink-0 overflow-hidden">
-      {logo ? (
-        <img src={logo} alt={`${name} logo`} class="w-10 h-10 object-contain" />
-      ) : (
-        <span class="text-2xl font-bold gradient-text">{name.charAt(0)}</span>
-      )}
+      <LogoImg slug={slug} name={name} class="w-10 h-10 object-contain" />
     </div>
 
     <!-- Info -->

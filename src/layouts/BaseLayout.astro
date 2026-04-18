@@ -2,6 +2,7 @@
 import SEOHead from '../components/SEOHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { toolDomains } from '../data/domains';
 import '../styles/global.css';
 
 interface Props {
@@ -12,6 +13,7 @@ interface Props {
 }
 
 const { title, description, canonical, schema } = Astro.props;
+const domainsJson = JSON.stringify(toolDomains);
 ---
 
 <!DOCTYPE html>
@@ -25,5 +27,18 @@ const { title, description, canonical, schema } = Astro.props;
       <slot />
     </main>
     <Footer />
+    <script define:vars={{ domainsJson }}>
+      // Replace inline /logos/*.svg with Clearbit logos (for markdown content)
+      const domains = JSON.parse(domainsJson);
+      document.querySelectorAll('img[src^="/logos/"]').forEach(img => {
+        const slug = img.getAttribute('src').replace('/logos/', '').replace('.svg', '').replace('.png', '');
+        const domain = domains[slug];
+        if (domain) {
+          const original = img.getAttribute('src');
+          img.onerror = function() { this.onerror = null; this.src = original; };
+          img.src = `https://logo.clearbit.com/${domain}?size=128`;
+        }
+      });
+    </script>
   </body>
 </html>

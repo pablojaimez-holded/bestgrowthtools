@@ -23,6 +23,7 @@ const enrichedFrontmatter = {
   ...frontmatter,
   productAData: productA ? {
     name: productA.data.name,
+    slug: productA.data.slug || productA.id,
     tagline: productA.data.tagline,
     rating: productA.data.rating,
     pricing: productA.data.pricing,
@@ -30,6 +31,7 @@ const enrichedFrontmatter = {
   } : null,
   productBData: productB ? {
     name: productB.data.name,
+    slug: productB.data.slug || productB.id,
     tagline: productB.data.tagline,
     rating: productB.data.rating,
     pricing: productB.data.pricing,

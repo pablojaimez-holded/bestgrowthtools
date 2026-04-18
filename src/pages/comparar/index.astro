@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import LogoImg from '../../components/LogoImg.astro';
 
 const vsPages = await getCollection('vs');
 const allReviews = await getCollection('reviews');
@@ -13,8 +14,8 @@ const comparisons = vsPages.map(vs => {
     title: vs.data.title,
     nameA: a?.data.name || vs.data.productA,
     nameB: b?.data.name || vs.data.productB,
-    logoA: a?.data.logo || `/logos/${vs.data.productA}.svg`,
-    logoB: b?.data.logo || `/logos/${vs.data.productB}.svg`,
+    slugA: vs.data.productA,
+    slugB: vs.data.productB,
     ratingA: a?.data.rating || 0,
     ratingB: b?.data.rating || 0,
   };
@@ -44,12 +45,12 @@ const comparisons = vsPages.map(vs => {
           <a href={`/comparar/${vs.slug}`} class="group bg-white rounded-2xl border border-cream-dark/50 p-6 hover:shadow-card-hover hover:border-violet/30 transition-all duration-300">
             <div class="flex items-center justify-center gap-4 mb-4">
               <div class="flex flex-col items-center gap-1">
-                <img src={vs.logoA} alt={vs.nameA} width="40" height="40" class="rounded-lg" />
+                <LogoImg slug={vs.slugA} name={vs.nameA} class="w-10 h-10 object-contain rounded-lg" width={40} height={40} />
                 <span class="text-xs font-medium text-text-secondary">{vs.nameA}</span>
               </div>
               <span class="text-text-muted font-bold text-lg">VS</span>
               <div class="flex flex-col items-center gap-1">
-                <img src={vs.logoB} alt={vs.nameB} width="40" height="40" class="rounded-lg" />
+                <LogoImg slug={vs.slugB} name={vs.nameB} class="w-10 h-10 object-contain rounded-lg" width={40} height={40} />
                 <span class="text-xs font-medium text-text-secondary">{vs.nameB}</span>
               </div>
             </div>
